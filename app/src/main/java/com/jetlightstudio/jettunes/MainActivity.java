@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void playMusic(View view) {
-        if (mp == null) mp = MediaPlayer.create(this, R.raw.gopro);
+        if (mp == null) mp = MediaPlayer.create(this,R.raw.gopro);
         mp.start();
     }
 
