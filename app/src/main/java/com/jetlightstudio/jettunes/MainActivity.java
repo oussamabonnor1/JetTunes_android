@@ -1,6 +1,8 @@
 package com.jetlightstudio.jettunes;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -15,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,19 +26,23 @@ public class MainActivity extends AppCompatActivity {
     Button pauseButton;
     MediaPlayer mp;
     ArrayList<Song> songs;
+    HashMap<String, Integer> songID;
     ListView listView;
-    int currentID = 0;
+    Uri currentID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_main);
 
+        mp = new MediaPlayer();
         listView = (ListView) findViewById(R.id.listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                currentID = Integer.valueOf(getTitle().toString());
+                currentID = ContentUris.withAppendedId(
+                        android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        songID.get(listView.getItemAtPosition(i).toString()));
                 playMusic(view);
             }
         });
@@ -43,15 +50,15 @@ public class MainActivity extends AppCompatActivity {
         text = (TextView) findViewById(R.id.text);
         pauseButton = (Button) findViewById(R.id.pause);
         songs = new ArrayList<>();
+        songID = new HashMap<>();
         fillMusic();
-        mp = null;
     }
 
 
     public void playMusic(View view) {
         if (mp != null) mp.stop();
         mp = MediaPlayer.create(this, currentID);
-        mp.start();
+        if (mp != null) mp.start();
     }
 
     public void pauseMusic(View view) {
@@ -59,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void fillMusic() {
-        ArrayList<Long> titles = new ArrayList<>();
+        ArrayList<String> titles = new ArrayList<>();
         ContentResolver contentResolver = getContentResolver();
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor songCursor = contentResolver.query(songUri, null, null, null, null);
@@ -68,19 +75,19 @@ public class MainActivity extends AppCompatActivity {
             int songId = songCursor.getColumnIndex(MediaStore.Audio.Media._ID);
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-
             do {
                 long currentId = songCursor.getLong(songId);
                 String currentTitle = songCursor.getString(songTitle);
                 String currentArtist = songCursor.getString(songArtist);
                 songs.add(new Song(currentId, currentTitle, currentArtist));
+                songID.put(currentTitle, (int) currentId);
             } while (songCursor.moveToNext());
             for (int i = 0; i < songs.size(); i++) {
-                titles.add(songs.get(i).getSongID());
+                titles.add(songs.get(i).getSongTitle());
             }
         }
         songCursor.close();
-        ArrayAdapter<Long> adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, titles);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, titles);
         listView.setAdapter(adapter);
     }
 
