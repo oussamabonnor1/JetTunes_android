@@ -1,119 +1,91 @@
 package com.jetlightstudio.jettunes;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.provider.MediaStore;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import java.util.ArrayList;
 
+public class MainActivity extends AppCompatActivity {
+
+    TextView text;
     Button playButton;
     Button pauseButton;
     MediaPlayer mp;
+    ArrayList<Song> songs;
+    ListView listView;
+    int currentID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.content_main);
 
-        playButton = (Button) findViewById(R.id.play);
-        pauseButton = (Button) findViewById(R.id.pause);
-        mp = null;
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        listView = (ListView) findViewById(R.id.listView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                currentID = Integer.valueOf(getTitle().toString());
+                playMusic(view);
             }
         });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        playButton = (Button) findViewById(R.id.play);
+        text = (TextView) findViewById(R.id.text);
+        pauseButton = (Button) findViewById(R.id.pause);
+        songs = new ArrayList<>();
+        fillMusic();
+        mp = null;
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     public void playMusic(View view) {
-        if (mp == null) mp = MediaPlayer.create(this,R.raw.gopro);
+        if (mp != null) mp.stop();
+        mp = MediaPlayer.create(this, currentID);
         mp.start();
     }
 
     public void pauseMusic(View view) {
         mp.pause();
+    }
+
+    public void fillMusic() {
+        ArrayList<Long> titles = new ArrayList<>();
+        ContentResolver contentResolver = getContentResolver();
+        Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        Cursor songCursor = contentResolver.query(songUri, null, null, null, null);
+
+        if (songCursor != null && songCursor.moveToFirst()) {
+            int songId = songCursor.getColumnIndex(MediaStore.Audio.Media._ID);
+            int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+            int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+
+            do {
+                long currentId = songCursor.getLong(songId);
+                String currentTitle = songCursor.getString(songTitle);
+                String currentArtist = songCursor.getString(songArtist);
+                songs.add(new Song(currentId, currentTitle, currentArtist));
+            } while (songCursor.moveToNext());
+            for (int i = 0; i < songs.size(); i++) {
+                titles.add(songs.get(i).getSongID());
+            }
+        }
+        songCursor.close();
+        ArrayAdapter<Long> adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, titles);
+        listView.setAdapter(adapter);
+    }
+
+    @Override
+    public void grantUriPermission(String toPackage, Uri uri, int modeFlags) {
+        super.grantUriPermission(toPackage, uri, modeFlags);
     }
 }
