@@ -2,7 +2,6 @@ package com.jetlightstudio.jettunes;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -23,46 +22,71 @@ public class MainActivity extends AppCompatActivity {
 
     TextView text;
     Button playButton;
-    Button pauseButton;
     MediaPlayer mp;
     ArrayList<Song> songs;
     HashMap<String, Integer> songID;
     ListView listView;
-    Uri currentID;
+    Uri currentURI;
+    int currentIndex = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_main);
+        setContentView(R.layout.activity_player);
 
         mp = new MediaPlayer();
         listView = (ListView) findViewById(R.id.listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                currentID = ContentUris.withAppendedId(
-                        android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                        songID.get(listView.getItemAtPosition(i).toString()));
-                playMusic(view);
+                setCurrentURI(i);
+                startMusic(view);
             }
         });
         playButton = (Button) findViewById(R.id.play);
-        text = (TextView) findViewById(R.id.text);
-        pauseButton = (Button) findViewById(R.id.pause);
+        text = (TextView) findViewById(R.id.songTitle);
         songs = new ArrayList<>();
         songID = new HashMap<>();
         fillMusic();
     }
 
+    public void setCurrentURI(int index) {
+        String songTitle = listView.getItemAtPosition(index).toString();
+        currentURI = ContentUris.withAppendedId(
+                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                songID.get(songTitle));
+        currentIndex = index;
+        text.setText(songTitle);
+    }
 
-    public void playMusic(View view) {
-        if (mp != null) mp.stop();
-        mp = MediaPlayer.create(this, currentID);
+    public void startMusic(View v) {
+        mp.stop();
+        mp = MediaPlayer.create(this, currentURI);
+        playButton.setBackgroundResource(R.mipmap.pause);
         if (mp != null) mp.start();
     }
 
-    public void pauseMusic(View view) {
-        mp.pause();
+    public void nextSong(View view) {
+        setCurrentURI(currentIndex + 1);
+        startMusic(view);
+    }
+
+    public void prevSong(View view) {
+        setCurrentURI(currentIndex - 1);
+        startMusic(view);
+    }
+
+    public void playMusic(View view) {
+        if (mp != null) {
+            if (mp.isPlaying()) {
+                mp.pause();
+                playButton.setBackgroundResource(R.mipmap.play);
+            } else {
+                mp.start();
+                playButton.setBackgroundResource(R.mipmap.pause);
+            }
+        }
     }
 
     public void fillMusic() {
