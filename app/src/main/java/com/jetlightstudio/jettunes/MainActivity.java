@@ -2,6 +2,7 @@ package com.jetlightstudio.jettunes;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     public void startMusic(View v) {
         mp.stop();
         mp = MediaPlayer.create(this, currentURI);
-        playButton.setBackgroundResource(R.mipmap.pause);
+        playButton.setBackgroundResource(R.drawable.ic_pause_circle_outline_white_24dp);
         if (mp != null) mp.start();
     }
 
@@ -77,14 +78,19 @@ public class MainActivity extends AppCompatActivity {
         startMusic(view);
     }
 
+    public void goToSong(View view) {
+        Intent i = new Intent(MainActivity.this, SongActivity.class);
+        startActivity(i);
+    }
+
     public void playMusic(View view) {
         if (mp != null) {
             if (mp.isPlaying()) {
                 mp.pause();
-                playButton.setBackgroundResource(R.mipmap.play);
+                playButton.setBackgroundResource(R.drawable.ic_play_circle_outline_white_24dp);
             } else {
                 mp.start();
-                playButton.setBackgroundResource(R.mipmap.pause);
+                playButton.setBackgroundResource(R.drawable.ic_pause_circle_outline_white_24dp);
             }
         }
     }
@@ -99,17 +105,22 @@ public class MainActivity extends AppCompatActivity {
             int songId = songCursor.getColumnIndex(MediaStore.Audio.Media._ID);
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+            int songAlbum = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
             do {
                 long currentId = songCursor.getLong(songId);
                 String currentTitle = songCursor.getString(songTitle);
                 String currentArtist = songCursor.getString(songArtist);
-                songs.add(new Song(currentId, currentTitle, currentArtist));
+                String currentAlbum = songCursor.getString(songAlbum);
+
+                songs.add(new Song(currentId, currentTitle, currentArtist, currentAlbum));
                 songID.put(currentTitle, (int) currentId);
+
             } while (songCursor.moveToNext());
-            for (int i = 0; i < songs.size(); i++) {
+            for (int i = songs.size() - 1; i >= 0; i--) {
                 titles.add(songs.get(i).getSongTitle());
             }
         }
+
         songCursor.close();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, titles);
         listView.setAdapter(adapter);

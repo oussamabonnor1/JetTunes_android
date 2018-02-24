@@ -12,64 +12,88 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".7" />
+        android:layout_weight=".8" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".3"
+        android:layout_weight=".2"
+        android:background="@color/colorPrimary"
         android:gravity="center"
-        android:orientation="vertical"
-        android:weightSum="1">
+        android:onClick="goToSong"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/songTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="50sp"
+            android:layout_marginRight="50sp"
             android:layout_gravity="center"
+            android:ellipsize="marquee"
             android:gravity="center"
+            android:maxLines="1"
             android:text="Click a song to play it"
-            android:textColor="#212121"
-            android:textSize="25sp"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".6"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:weightSum="0.9">
 
             <Button
-                android:id="@+id/back"
-                android:layout_width="50dp"
+                android:id="@+id/repeat"
+                android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:background="@mipmap/back"
+                android:layout_weight=".125"
+                android:background="@drawable/ic_repeat_white_24dp"
                 android:onClick="prevSong" />
 
-            <Button
-                android:id="@+id/play"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@mipmap/play"
-                android:onClick="playMusic" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".65"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/back"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_skip_previous_white_24dp"
+                    android:onClick="prevSong" />
+
+                <Button
+                    android:id="@+id/play"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_play_circle_outline_white_24dp"
+                    android:onClick="playMusic" />
+
+                <Button
+                    android:id="@+id/next"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_skip_next_white_24dp"
+                    android:onClick="nextSong" />
+            </LinearLayout>
 
             <Button
-                android:id="@+id/next"
-                android:layout_width="50dp"
+                android:id="@+id/shuffle"
+                android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:background="@mipmap/next"
-                android:onClick="nextSong" />
+                android:layout_weight=".125"
+                android:background="@drawable/ic_shuffle_white_24dp"
+                android:onClick="prevSong" />
+
 
         </LinearLayout>
 
-        <SeekBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:max="100"
-            android:progress="50"
-            android:progressTint="#000000" />
     </LinearLayout>
 
 </LinearLayout>
