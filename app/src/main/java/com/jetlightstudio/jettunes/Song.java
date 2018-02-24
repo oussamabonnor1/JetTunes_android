@@ -1,5 +1,8 @@
 package com.jetlightstudio.jettunes;
 
+import android.content.ContentUris;
+import android.net.Uri;
+
 /**
  * Created by oussama on 24/11/2017.
  */
@@ -7,56 +10,36 @@ package com.jetlightstudio.jettunes;
 public class Song {
     private long mSongID;
     private String mSongTitle;
-    private String mSongArtist;
+    private String mSongAlbum;
+    private String duration;
+    private int idAlbum;
 
-    public Song(long mSongID, String mSongTitle, String mSongArtist, String mSongAlbum) {
+    public Song(long mSongID, String mSongTitle, String mSongAlbum, String duration, int idAlbum) {
+
         this.mSongID = mSongID;
         this.mSongTitle = mSongTitle;
-        this.mSongArtist = mSongArtist;
         this.mSongAlbum = mSongAlbum;
+        this.duration = duration;
+        this.idAlbum = idAlbum;
+    }
+
+    public String getDuration() {
+        return duration;
     }
 
     public long getmSongID() {
         return mSongID;
     }
 
-    public void setmSongID(long mSongID) {
-        this.mSongID = mSongID;
-    }
-
-    public String getmSongTitle() {
-        return mSongTitle;
-    }
-
-    public void setmSongTitle(String mSongTitle) {
-        this.mSongTitle = mSongTitle;
-    }
-
-    public String getmSongArtist() {
-        return mSongArtist;
-    }
-
-    public void setmSongArtist(String mSongArtist) {
-        this.mSongArtist = mSongArtist;
-    }
-
     public String getmSongAlbum() {
         return mSongAlbum;
     }
 
-    public void setmSongAlbum(String mSongAlbum) {
-        this.mSongAlbum = mSongAlbum;
+    public int getIdAlbum() {
+        return idAlbum;
     }
 
-    private String mSongAlbum;
-
-
-
-    public long getSongID(){
-        return mSongID;
-    }
-
-    public String getSongTitle(){
+    public String getSongTitle() {
         return mSongTitle;
     }
 }

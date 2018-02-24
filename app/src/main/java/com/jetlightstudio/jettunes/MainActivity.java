@@ -1,7 +1,9 @@
 package com.jetlightstudio.jettunes;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -10,14 +12,18 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -29,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     Button repeatButton;
     MediaPlayer mp;
     ArrayList<Song> songs;
-    HashMap<String, Integer> songID;
+    HashMap<Integer, Song> songsMap;
     ListView listView;
     Uri currentURI;
     int currentIndex = 0;
@@ -55,15 +61,16 @@ public class MainActivity extends AppCompatActivity {
         repeatButton = (Button) findViewById(R.id.repeat);
         text = (TextView) findViewById(R.id.songTitle);
         songs = new ArrayList<>();
-        songID = new HashMap<>();
+        songsMap = new HashMap<>();
         fillMusic();
     }
 
     public void setCurrentURI(int index) {
-        String songTitle = listView.getItemAtPosition(index).toString();
+        String songTitle = songsMap.get(index).getSongTitle();
+        System.out.println(songsMap.get(index).getSongTitle() + "\n" + index);
         currentURI = ContentUris.withAppendedId(
                 android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                songID.get(songTitle));
+                songsMap.get(index).getmSongID());
         currentIndex = index;
         text.setText(songTitle);
     }
@@ -140,29 +147,73 @@ public class MainActivity extends AppCompatActivity {
             int songId = songCursor.getColumnIndex(MediaStore.Audio.Media._ID);
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+            int songDuration = songCursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
             int songAlbum = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
             do {
-                long currentId = songCursor.getLong(songId);
+                int currentId = songCursor.getInt(songId);
                 String currentTitle = songCursor.getString(songTitle);
                 String currentArtist = songCursor.getString(songArtist);
-                String currentAlbum = songCursor.getString(songAlbum);
+                String currentDuration = songCursor.getString(songDuration);
+                int currentAlbum = songCursor.getInt(songAlbum);
 
-                songs.add(new Song(currentId, currentTitle, currentArtist, currentAlbum));
-                songID.put(currentTitle, (int) currentId);
-
+                songs.add(new Song(currentId, currentTitle, currentArtist, currentDuration, currentAlbum));
+                songsMap.put(songs.size() - 1, songs.get(songs.size() - 1));
             } while (songCursor.moveToNext());
+            Collections.reverse(songs);
             for (int i = songs.size() - 1; i >= 0; i--) {
                 titles.add(songs.get(i).getSongTitle());
             }
         }
 
         songCursor.close();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, titles);
-        listView.setAdapter(adapter);
+        CustumAdapter c = new CustumAdapter(songsMap);
+        ArrayAdapter<String> a = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titles);
+        listView.setAdapter(c);
     }
 
     @Override
     public void grantUriPermission(String toPackage, Uri uri, int modeFlags) {
         super.grantUriPermission(toPackage, uri, modeFlags);
+    }
+
+
+    public class CustumAdapter extends BaseAdapter {
+
+        HashMap<String, Song> songsMap;
+
+        public CustumAdapter(HashMap songsMap) {
+            this.songsMap = songsMap;
+        }
+
+        @Override
+        public int getCount() {
+            return songsMap.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            view = getLayoutInflater().inflate(R.layout.customadapter, null);
+            ImageView imageView = (ImageView) view.findViewById(R.id.album);
+            TextView title = (TextView) view.findViewById(R.id.title);
+            TextView albumTitle = (TextView) view.findViewById(R.id.albumTitle);
+            TextView duration = (TextView) view.findViewById(R.id.duration);
+
+            imageView.setImageResource(songsMap.get(i).getIdAlbum());
+            System.out.println(title == null);
+            title.setText(songsMap.get(i).getSongTitle());
+            albumTitle.setText(songsMap.get(i).getmSongAlbum());
+            duration.setText(songsMap.get(i).getDuration());
+            return view;
+        }
     }
 }
