@@ -20,7 +20,7 @@ public class SongActivity extends AppCompatActivity {
     TextView currentTime;
     TextView songDuartion;
     TextView songIndex;
-    Button mute;
+    Button muteButton;
     Button playButton;
     Button shuffleButton;
     Button repeatButton;
@@ -30,6 +30,7 @@ public class SongActivity extends AppCompatActivity {
     int currentIndex = 0;
     boolean shuffle = true;
     boolean repeatAll = true;
+    boolean mute = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,7 @@ public class SongActivity extends AppCompatActivity {
         setContentView(R.layout.activity_song);
         songTitle = (TextView) findViewById(R.id.songTitle);
         songIndex = (TextView) findViewById(R.id.songIndex);
-        mute = (Button) findViewById(R.id.mute);
+        muteButton = (Button) findViewById(R.id.mute);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         currentTime = (TextView) findViewById(R.id.currentTime);
         songDuartion = (TextView) findViewById(R.id.duration);
@@ -130,6 +131,17 @@ public class SongActivity extends AppCompatActivity {
         int min = (int) total / 60000;
         int sec = (int) total / 1000 % 60;
         songDuartion.setText(String.format("%02d:%02d", min, sec));
+        seekBar.setMax((int) total / 1000);
         songIndex.setText((currentIndex + 1) + "/" + MainActivity.songsMap.size());
+    }
+
+    public void goToList(View view) {
+        onBackPressed();
+    }
+
+    public void muteSong(View view) {
+        mute = !mute;
+        muteButton.setBackgroundResource(mute ? R.drawable.ic_volume_off_white_24dp : R.drawable.ic_volume_up_white_24dp);
+        MainActivity.mp.setVolume(mute ? 0 : 1, mute ? 0 : 1);
     }
 }

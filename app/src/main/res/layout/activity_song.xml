@@ -34,11 +34,11 @@
 
             <Button
                 android:id="@+id/list"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:background="@drawable/ic_queue_music_white_24dp"
                 android:foreground="@drawable/circleripple"
-                android:onClick="" />
+                android:onClick="goToList" />
 
             <TextView
                 android:id="@+id/songIndex"
@@ -53,11 +53,11 @@
 
             <Button
                 android:id="@+id/mute"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:background="@drawable/ic_volume_up_white_24dp"
                 android:foreground="@drawable/circleripple"
-                android:onClick="" />
+                android:onClick="muteSong" />
 
         </LinearLayout>
     </LinearLayout>
@@ -70,7 +70,6 @@
         android:background="@drawable/custompanel"
         android:foreground="@drawable/rectangleripple"
         android:gravity="center"
-        android:onClick="goToSong"
         android:orientation="vertical"
         android:weightSum="1">
 
