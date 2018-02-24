@@ -89,7 +89,7 @@
                 android:layout_height="50dp"
                 android:layout_weight=".125"
                 android:background="@drawable/ic_shuffle_white_24dp"
-                android:onClick="prevSong" />
+                android:onClick="shuffleSong" />
 
 
         </LinearLayout>

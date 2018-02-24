@@ -15,21 +15,25 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     TextView text;
     Button playButton;
+    Button shuffleButton;
+    Button repeatButton;
     MediaPlayer mp;
     ArrayList<Song> songs;
     HashMap<String, Integer> songID;
     ListView listView;
     Uri currentURI;
     int currentIndex = 0;
-
+    boolean shuffle = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         playButton = (Button) findViewById(R.id.play);
+        shuffleButton = (Button) findViewById(R.id.shuffle);
+        repeatButton = (Button) findViewById(R.id.repeat);
         text = (TextView) findViewById(R.id.songTitle);
         songs = new ArrayList<>();
         songID = new HashMap<>();
@@ -69,13 +75,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void nextSong(View view) {
-        setCurrentURI(currentIndex + 1);
+        setCurrentURI(!shuffle ? currentIndex + 1 : new Random().nextInt(songs.size()));
         startMusic(view);
     }
 
     public void prevSong(View view) {
-        setCurrentURI(currentIndex - 1);
+        setCurrentURI(!shuffle ? currentIndex - 1 : new Random().nextInt(songs.size()));
         startMusic(view);
+    }
+
+    public void shuffleSong(View view) {
+        shuffle = !shuffle;
+        Toast.makeText(this, shuffle ? "Shuffle On" : "Shuffle Off", Toast.LENGTH_SHORT).show();
+        shuffleButton.setBackgroundResource(shuffle ? R.drawable.ic_shuffle_white_24dp : R.drawable.ic_shuffle_black_24dp);
     }
 
     public void goToSong(View view) {
