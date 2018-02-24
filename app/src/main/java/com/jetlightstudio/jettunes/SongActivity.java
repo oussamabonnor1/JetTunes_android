@@ -4,6 +4,7 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,7 +25,10 @@ public class SongActivity extends AppCompatActivity {
     Button playButton;
     Button shuffleButton;
     Button repeatButton;
+
     SeekBar seekBar;
+    final Handler handler = new Handler();
+    Runnable runnable;
 
     Uri currentURI;
     int currentIndex = 0;
@@ -47,6 +51,7 @@ public class SongActivity extends AppCompatActivity {
         playButton = (Button) findViewById(R.id.play);
 
         loadData();
+        settingUpSeekBar();
     }
 
     public void setCurrentURI(int index) {
@@ -114,9 +119,11 @@ public class SongActivity extends AppCompatActivity {
         if (MainActivity.mp != null) {
             if (MainActivity.mp.isPlaying()) {
                 MainActivity.mp.pause();
+                handler.removeCallbacks(runnable);
                 playButton.setBackgroundResource(R.drawable.ic_play_circle_outline_white_24dp);
             } else {
                 MainActivity.mp.start();
+                handler.postDelayed(runnable, 0);
                 playButton.setBackgroundResource(R.drawable.ic_pause_circle_outline_white_24dp);
             }
         }
@@ -131,7 +138,7 @@ public class SongActivity extends AppCompatActivity {
         int min = (int) total / 60000;
         int sec = (int) total / 1000 % 60;
         songDuartion.setText(String.format("%02d:%02d", min, sec));
-        seekBar.setMax((int) total / 1000);
+        seekBar.setMax(MainActivity.mp.getDuration());
         songIndex.setText((currentIndex + 1) + "/" + MainActivity.songsMap.size());
     }
 
@@ -143,5 +150,40 @@ public class SongActivity extends AppCompatActivity {
         mute = !mute;
         muteButton.setBackgroundResource(mute ? R.drawable.ic_volume_off_white_24dp : R.drawable.ic_volume_up_white_24dp);
         MainActivity.mp.setVolume(mute ? 0 : 1, mute ? 0 : 1);
+    }
+
+    public void settingUpSeekBar() {
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                seekBar.setProgress(MainActivity.mp.getCurrentPosition());
+                int total = MainActivity.mp.getCurrentPosition();
+                int min = total / 60000;
+                int sec = total / 1000 % 60;
+                currentTime.setText(String.format("%02d:%02d", min, sec));
+                handler.postDelayed(this, 50);
+            }
+        };
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if (b) {
+                    MainActivity.mp.seekTo(i);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        handler.postDelayed(runnable, 0);
     }
 }

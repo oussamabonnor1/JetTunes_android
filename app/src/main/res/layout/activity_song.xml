@@ -183,7 +183,7 @@
                     android:id="@+id/play"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:background="@drawable/ic_play_circle_outline_white_24dp"
+                    android:background="@drawable/ic_pause_circle_outline_white_24dp"
                     android:foreground="@drawable/circleripple"
                     android:onClick="playMusic" />
 
