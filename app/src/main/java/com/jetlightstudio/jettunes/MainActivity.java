@@ -1,9 +1,7 @@
 package com.jetlightstudio.jettunes;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -23,9 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
     Button playButton;
     Button shuffleButton;
     Button repeatButton;
-    MediaPlayer mp;
+    static MediaPlayer mp;
     ArrayList<Song> songs;
-    HashMap<Integer, Song> songsMap;
+    static HashMap<Integer, Song> songsMap;
     ListView listView;
     Uri currentURI;
     int currentIndex = 0;
@@ -47,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-
+        songsMap = new HashMap<>();
         mp = new MediaPlayer();
         listView = (ListView) findViewById(R.id.listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -62,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         repeatButton = (Button) findViewById(R.id.repeat);
         text = (TextView) findViewById(R.id.songTitle);
         songs = new ArrayList<>();
-        songsMap = new HashMap<>();
         fillMusic();
     }
 
@@ -123,6 +118,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToSong(View view) {
         Intent i = new Intent(MainActivity.this, SongActivity.class);
+        i.putExtra("currentIndex", currentIndex);
+        System.out.println(currentIndex);
+        i.putExtra("shuffle", shuffle);
+        i.putExtra("repeatAll", repeatAll);
+        //i.putExtra("songsMap", songsMap);
         startActivity(i);
     }
 
