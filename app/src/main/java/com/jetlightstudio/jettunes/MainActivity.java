@@ -208,18 +208,20 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            int index = songsMap.size()-1 - i;
+            int index = songsMap.size() - 1 - i;
             view = getLayoutInflater().inflate(R.layout.customadapter, null);
             ImageView imageView = view.findViewById(R.id.album);
             TextView title = view.findViewById(R.id.title);
             TextView albumTitle = view.findViewById(R.id.albumTitle);
             TextView duration = view.findViewById(R.id.duration);
 
-            System.out.println(songsMap.get(index).getIdAlbum());
-            imageView.setImageResource(songsMap.get(index).getIdAlbum());
+            imageView.setImageResource(songsMap.get(index).getIdAlbum() != 0 ? songsMap.get(index).getIdAlbum() : R.drawable.ic_audiotrack_white_24dp);
             title.setText(songsMap.get(index).getSongTitle());
             albumTitle.setText(songsMap.get(index).getmSongAlbum());
-            duration.setText(songsMap.get(index).getDuration());
+            long total = Long.valueOf(songsMap.get(index).getDuration());
+            int min = (int) total / 60000;
+            int sec = (int) total / 1000 % 60;
+            duration.setText(String.format("%02d:%02d", min, sec));
             return view;
         }
     }
