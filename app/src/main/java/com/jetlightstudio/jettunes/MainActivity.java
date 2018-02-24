@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     Uri currentURI;
     int currentIndex = 0;
     boolean shuffle = false;
+    boolean repeatAll = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +68,28 @@ public class MainActivity extends AppCompatActivity {
         text.setText(songTitle);
     }
 
-    public void startMusic(View v) {
+    public void startMusic(final View v) {
         mp.stop();
         mp = MediaPlayer.create(this, currentURI);
         playButton.setBackgroundResource(R.drawable.ic_pause_circle_outline_white_24dp);
-        if (mp != null) mp.start();
+        if (mp != null) {
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    if (repeatAll) {
+                        if (currentIndex >= songs.size() - 1) {
+                            currentIndex = 0;
+                            startMusic(v);
+                        } else {
+                            nextSong(v);
+                        }
+                    } else {
+                        startMusic(v);
+                    }
+                }
+            });
+            mp.start();
+        }
     }
 
     public void nextSong(View view) {
@@ -88,6 +106,11 @@ public class MainActivity extends AppCompatActivity {
         shuffle = !shuffle;
         Toast.makeText(this, shuffle ? "Shuffle On" : "Shuffle Off", Toast.LENGTH_SHORT).show();
         shuffleButton.setBackgroundResource(shuffle ? R.drawable.ic_shuffle_white_24dp : R.drawable.ic_shuffle_black_24dp);
+    }
+
+    public void repeatSong(View view) {
+        repeatAll = !repeatAll;
+        repeatButton.setBackgroundResource(repeatAll ? R.drawable.ic_repeat_white_24dp : R.drawable.ic_repeat_one_white_24dp);
     }
 
     public void goToSong(View view) {

@@ -53,7 +53,7 @@
                 android:layout_height="50dp"
                 android:layout_weight=".125"
                 android:background="@drawable/ic_repeat_white_24dp"
-                android:onClick="prevSong" />
+                android:onClick="repeatSong" />
 
             <LinearLayout
                 android:layout_width="0dp"
