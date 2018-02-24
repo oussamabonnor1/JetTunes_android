@@ -25,6 +25,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,11 +67,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setCurrentURI(int index) {
-        String songTitle = songsMap.get(index).getSongTitle();
-        System.out.println(songsMap.get(index).getSongTitle() + "\n" + index);
+        int i = songsMap.size() - 1 - index;
+        String songTitle = songsMap.get(i).getSongTitle();
         currentURI = ContentUris.withAppendedId(
                 android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                songsMap.get(index).getmSongID());
+                songsMap.get(i).getmSongID());
         currentIndex = index;
         text.setText(songTitle);
     }
@@ -139,32 +140,37 @@ public class MainActivity extends AppCompatActivity {
 
     public void fillMusic() {
         ArrayList<String> titles = new ArrayList<>();
+        //SONG CURSOR INITIALISED
         ContentResolver contentResolver = getContentResolver();
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor songCursor = contentResolver.query(songUri, null, null, null, null);
+        //Album cursor initialised
+        ContentResolver cr = getContentResolver();
+        Uri albumUri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
+        Cursor albumCursor = cr.query(albumUri, null, null, null, null);
 
-        if (songCursor != null && songCursor.moveToFirst()) {
+        if (songCursor != null && songCursor.moveToFirst() && albumCursor != null && albumCursor.moveToFirst()) {
             int songId = songCursor.getColumnIndex(MediaStore.Audio.Media._ID);
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
             int songDuration = songCursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
-            int songAlbum = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
+            int songAlbum = albumCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART);
+
             do {
                 int currentId = songCursor.getInt(songId);
                 String currentTitle = songCursor.getString(songTitle);
                 String currentArtist = songCursor.getString(songArtist);
                 String currentDuration = songCursor.getString(songDuration);
-                int currentAlbum = songCursor.getInt(songAlbum);
+                int currentAlbum = albumCursor.getInt(songAlbum);
 
                 songs.add(new Song(currentId, currentTitle, currentArtist, currentDuration, currentAlbum));
                 songsMap.put(songs.size() - 1, songs.get(songs.size() - 1));
             } while (songCursor.moveToNext());
-            Collections.reverse(songs);
-            for (int i = songs.size() - 1; i >= 0; i--) {
+            for (int i = 0; i < songs.size(); i++) {
                 titles.add(songs.get(i).getSongTitle());
             }
         }
-
+        albumCursor.close();
         songCursor.close();
         CustumAdapter c = new CustumAdapter(songsMap);
         ArrayAdapter<String> a = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titles);
@@ -179,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
     public class CustumAdapter extends BaseAdapter {
 
-        HashMap<String, Song> songsMap;
+        HashMap<Integer, Song> songsMap;
 
         public CustumAdapter(HashMap songsMap) {
             this.songsMap = songsMap;
@@ -202,17 +208,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+            int index = songsMap.size()-1 - i;
             view = getLayoutInflater().inflate(R.layout.customadapter, null);
-            ImageView imageView = (ImageView) view.findViewById(R.id.album);
-            TextView title = (TextView) view.findViewById(R.id.title);
-            TextView albumTitle = (TextView) view.findViewById(R.id.albumTitle);
-            TextView duration = (TextView) view.findViewById(R.id.duration);
+            ImageView imageView = view.findViewById(R.id.album);
+            TextView title = view.findViewById(R.id.title);
+            TextView albumTitle = view.findViewById(R.id.albumTitle);
+            TextView duration = view.findViewById(R.id.duration);
 
-            imageView.setImageResource(songsMap.get(i).getIdAlbum());
-            System.out.println(title == null);
-            title.setText(songsMap.get(i).getSongTitle());
-            albumTitle.setText(songsMap.get(i).getmSongAlbum());
-            duration.setText(songsMap.get(i).getDuration());
+            System.out.println(songsMap.get(index).getIdAlbum());
+            imageView.setImageResource(songsMap.get(index).getIdAlbum());
+            title.setText(songsMap.get(index).getSongTitle());
+            albumTitle.setText(songsMap.get(index).getmSongAlbum());
+            duration.setText(songsMap.get(index).getDuration());
             return view;
         }
     }
