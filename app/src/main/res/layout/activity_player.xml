@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#494949"
     android:orientation="vertical"
     android:weightSum="1"
-    tools:context="com.jetlightstudio.jettunes.MainActivity"
-    android:background="#494949">
+    tools:context="com.jetlightstudio.jettunes.MainActivity">
 
     <ListView
         android:id="@+id/listView"
@@ -20,6 +20,7 @@
         android:layout_height="0dp"
         android:layout_weight=".2"
         android:background="@drawable/custompanel"
+        android:foreground="@drawable/rectangleripple"
         android:gravity="center"
         android:onClick="goToSong"
         android:orientation="vertical">
@@ -54,6 +55,7 @@
                 android:layout_height="50dp"
                 android:layout_weight=".125"
                 android:background="@drawable/ic_repeat_white_24dp"
+                android:foreground="@drawable/circleripple"
                 android:onClick="repeatSong" />
 
             <LinearLayout
@@ -67,6 +69,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/ic_skip_previous_white_24dp"
+                    android:foreground="@drawable/circleripple"
                     android:onClick="prevSong" />
 
                 <Button
@@ -74,6 +77,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/ic_play_circle_outline_white_24dp"
+                    android:foreground="@drawable/circleripple"
                     android:onClick="playMusic" />
 
                 <Button
@@ -81,6 +85,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/ic_skip_next_white_24dp"
+                    android:foreground="@drawable/circleripple"
                     android:onClick="nextSong" />
             </LinearLayout>
 
@@ -90,6 +95,7 @@
                 android:layout_height="50dp"
                 android:layout_weight=".125"
                 android:background="@drawable/ic_shuffle_white_24dp"
+                android:foreground="@drawable/circleripple"
                 android:onClick="shuffleSong" />
 
 
