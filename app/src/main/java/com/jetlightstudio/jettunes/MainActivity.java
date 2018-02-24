@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     Uri currentURI;
     int currentIndex = 0;
-    boolean shuffle = false;
+    boolean shuffle = true;
     boolean repeatAll = true;
 
     @Override

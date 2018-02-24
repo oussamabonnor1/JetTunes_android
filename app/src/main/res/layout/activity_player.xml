@@ -23,15 +23,16 @@
         android:foreground="@drawable/rectangleripple"
         android:gravity="center"
         android:onClick="goToSong"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/songTitle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="0dp"
             android:layout_marginLeft="50sp"
             android:layout_marginRight="50sp"
+            android:layout_weight=".3"
             android:ellipsize="marquee"
             android:gravity="center"
             android:maxLines="1"
@@ -42,8 +43,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_height="0dp"
+            android:layout_weight=".7"
+            android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
@@ -52,38 +54,40 @@
             <Button
                 android:id="@+id/repeat"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight=".125"
+                android:layout_height="30dp"
+                android:layout_weight=".075"
                 android:background="@drawable/ic_repeat_white_24dp"
                 android:foreground="@drawable/circleripple"
-                android:onClick="repeatSong" />
+                android:onClick="repeatSong"
+                android:paddingBottom="10dp" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".65"
-                android:gravity="center">
+                android:gravity="center"
+                android:paddingBottom="10dp">
 
                 <Button
                     android:id="@+id/back"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:background="@drawable/ic_skip_previous_white_24dp"
                     android:foreground="@drawable/circleripple"
                     android:onClick="prevSong" />
 
                 <Button
                     android:id="@+id/play"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:background="@drawable/ic_play_circle_outline_white_24dp"
                     android:foreground="@drawable/circleripple"
                     android:onClick="playMusic" />
 
                 <Button
                     android:id="@+id/next"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:background="@drawable/ic_skip_next_white_24dp"
                     android:foreground="@drawable/circleripple"
                     android:onClick="nextSong" />
@@ -92,8 +96,9 @@
             <Button
                 android:id="@+id/shuffle"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight=".125"
+                android:layout_height="30dp"
+                android:layout_weight=".075"
+
                 android:background="@drawable/ic_shuffle_white_24dp"
                 android:foreground="@drawable/circleripple"
                 android:onClick="shuffleSong" />
