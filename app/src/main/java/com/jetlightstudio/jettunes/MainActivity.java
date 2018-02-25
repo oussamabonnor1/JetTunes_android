@@ -226,12 +226,15 @@ public class MainActivity extends AppCompatActivity {
             albumTitle.setText(songsMap.get(index).getmSongAlbum());
 
             if (i == currentIndex) {
-                imageView.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
+                imageView.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
                 title.setTypeface(Typeface.DEFAULT_BOLD);
+                title.setTextColor(Color.parseColor("#212121"));
                 albumTitle.setTypeface(Typeface.DEFAULT_BOLD);
+                albumTitle.setTextColor(Color.parseColor("#212121"));
                 duration.setTypeface(Typeface.DEFAULT_BOLD);
+                duration.setTextColor(Color.parseColor("#212121"));
                 LinearLayout background = view.findViewById(R.id.background);
-                background.setBackgroundColor(0x292929);
+                background.setBackgroundColor(Color.parseColor("#F4F4F4"));
                 title.setSelected(true);
             } else {
                 imageView.setImageResource(songsMap.get(index).getIdAlbum() != 0 ? songsMap.get(index).getIdAlbum() : R.drawable.ic_audiotrack_white_24dp);
