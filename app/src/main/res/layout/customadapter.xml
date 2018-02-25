@@ -2,36 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/background"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:weightSum="1">
 
     <LinearLayout
-        android:foreground="@drawable/rectangleripple"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".13"
-        android:paddingTop="10dp"
-        android:orientation="horizontal">
+        android:layout_weight=".11"
+        android:foreground="@drawable/rectangleripple"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
         <ImageView
             android:id="@+id/album"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:src="@drawable/ic_play_circle_outline_white_24dp" />
+            android:src="@drawable/ic_audiotrack_white_24dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:weightSum="1">
+            android:weightSum=".8">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight=".5"
+                android:layout_weight=".4"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -41,11 +42,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".7"
                     android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
                     android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
                     android:maxLines="1"
+                    android:scrollHorizontally="true"
                     android:text="Song name"
                     android:textColor="@color/colorAccent"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/duration"
@@ -64,7 +68,7 @@
                 android:id="@+id/albumTitle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="12dp"
                 android:layout_weight=".3"
                 android:ellipsize="marquee"
                 android:gravity="center_vertical"

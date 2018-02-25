@@ -19,10 +19,9 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="75dp"
-            android:layout_weight=".8"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_album_white_48dp" />
+            android:layout_margin="70dp"
+            android:layout_weight=".75"
+            android:src="@drawable/jetlight" />
 
         <LinearLayout
             android:layout_width="match_parent"

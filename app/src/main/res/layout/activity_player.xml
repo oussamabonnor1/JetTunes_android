@@ -13,38 +13,38 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".8" />
+        android:layout_weight=".85"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".2"
+        android:layout_weight=".15"
         android:background="@drawable/custompanel"
         android:foreground="@drawable/rectangleripple"
         android:gravity="center"
         android:onClick="goToSong"
         android:orientation="vertical"
-        android:weightSum="1">
+        android:weightSum=".5">
 
-        <TextView
+        <!--<TextView
             android:id="@+id/songTitle"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginLeft="50sp"
             android:layout_marginRight="50sp"
-            android:layout_weight=".3"
+            android:layout_weight=".2"
             android:ellipsize="marquee"
             android:gravity="center"
             android:maxLines="1"
             android:text="Click a song to play it"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight=".7"
+            android:layout_weight=".3"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="15dp"
@@ -65,8 +65,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".65"
-                android:gravity="center"
-                android:paddingBottom="10dp">
+                android:gravity="center">
 
                 <Button
                     android:id="@+id/back"
@@ -78,8 +77,8 @@
 
                 <Button
                     android:id="@+id/play"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:background="@drawable/ic_play_circle_outline_white_24dp"
                     android:foreground="@drawable/circleripple"
                     android:onClick="playMusic" />
@@ -98,7 +97,6 @@
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight=".075"
-
                 android:background="@drawable/ic_shuffle_white_24dp"
                 android:foreground="@drawable/circleripple"
                 android:onClick="shuffleSong" />

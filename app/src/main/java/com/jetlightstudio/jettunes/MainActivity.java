@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,13 +29,14 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView text;
+    //TextView text;
     Button playButton;
     Button shuffleButton;
     Button repeatButton;
     static MediaPlayer mp;
     ArrayList<Song> songs;
     static HashMap<Integer, Song> songsMap;
+    CustumAdapter c;
     ListView listView;
     Uri currentURI;
     int currentIndex = 0;
@@ -49,14 +53,16 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                 setCurrentURI(i);
                 startMusic(view);
+                //refreshing entire listView to make sure only selected song is highlighted
+                listView.setAdapter(c);
             }
         });
         playButton = (Button) findViewById(R.id.play);
         shuffleButton = (Button) findViewById(R.id.shuffle);
         repeatButton = (Button) findViewById(R.id.repeat);
-        text = (TextView) findViewById(R.id.songTitle);
         songs = new ArrayList<>();
         fillMusic();
     }
@@ -68,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 songsMap.get(i).getmSongID());
         currentIndex = index;
-        text.setText(songTitle);
+        //text.setText(songTitle);
     }
 
     public void startMusic(final View v) {
@@ -172,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         }
         albumCursor.close();
         songCursor.close();
-        CustumAdapter c = new CustumAdapter(songsMap);
+        c = new CustumAdapter(songsMap);
         ArrayAdapter<String> a = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titles);
         listView.setAdapter(c);
     }
@@ -208,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+            System.out.println("called");
             int index = songsMap.size() - 1 - i;
             view = getLayoutInflater().inflate(R.layout.customadapter, null);
             ImageView imageView = view.findViewById(R.id.album);
@@ -215,9 +222,24 @@ public class MainActivity extends AppCompatActivity {
             TextView albumTitle = view.findViewById(R.id.albumTitle);
             TextView duration = view.findViewById(R.id.duration);
 
-            imageView.setImageResource(songsMap.get(index).getIdAlbum() != 0 ? songsMap.get(index).getIdAlbum() : R.drawable.ic_audiotrack_white_24dp);
             title.setText(songsMap.get(index).getSongTitle());
             albumTitle.setText(songsMap.get(index).getmSongAlbum());
+
+            if (i == currentIndex) {
+                imageView.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
+                title.setTypeface(Typeface.DEFAULT_BOLD);
+                albumTitle.setTypeface(Typeface.DEFAULT_BOLD);
+                duration.setTypeface(Typeface.DEFAULT_BOLD);
+                LinearLayout background = view.findViewById(R.id.background);
+                background.setBackgroundColor(0x292929);
+                title.setSelected(true);
+            } else {
+                imageView.setImageResource(songsMap.get(index).getIdAlbum() != 0 ? songsMap.get(index).getIdAlbum() : R.drawable.ic_audiotrack_white_24dp);
+                title.setTypeface(Typeface.DEFAULT);
+                albumTitle.setTypeface(Typeface.DEFAULT_BOLD);
+                duration.setTypeface(Typeface.DEFAULT_BOLD);
+            }
+
             long total = Long.valueOf(songsMap.get(index).getDuration());
             int min = (int) total / 60000;
             int sec = (int) total / 1000 % 60;
