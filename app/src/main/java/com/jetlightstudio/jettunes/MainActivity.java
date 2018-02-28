@@ -236,11 +236,6 @@ public class MainActivity extends AppCompatActivity {
                 LinearLayout background = view.findViewById(R.id.background);
                 background.setBackgroundColor(Color.parseColor("#F4F4F4"));
                 title.setSelected(true);
-            } else {
-                imageView.setImageResource(songsMap.get(index).getIdAlbum() != 0 ? songsMap.get(index).getIdAlbum() : R.drawable.ic_audiotrack_white_24dp);
-                title.setTypeface(Typeface.DEFAULT);
-                albumTitle.setTypeface(Typeface.DEFAULT_BOLD);
-                duration.setTypeface(Typeface.DEFAULT_BOLD);
             }
 
             long total = Long.valueOf(songsMap.get(index).getDuration());
