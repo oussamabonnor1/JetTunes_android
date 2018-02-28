@@ -53,9 +53,14 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                int scroll = listView.getFirstVisiblePosition();
                 setCurrentURI(i);
                 startMusic(view);
+
+                //weird code about getting back to position when we switch
+                View v = listView.getChildAt(0);
+                int top = (v == null) ? 0 : (v.getTop());
+                listView.setSelectionFromTop(scroll, top);
             }
         });
         playButton = (Button) findViewById(R.id.play);
