@@ -134,7 +134,6 @@
             android:layout_marginLeft="50sp"
             android:layout_marginRight="50sp"
             android:layout_weight=".2"
-            android:ellipsize="marquee"
             android:gravity="center"
             android:maxLines="1"
             android:text="Click a song to play it"

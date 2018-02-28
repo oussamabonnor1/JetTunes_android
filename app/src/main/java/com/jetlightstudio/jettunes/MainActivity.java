@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
                 setCurrentURI(i);
                 startMusic(view);
-                //refreshing entire listView to make sure only selected song is highlighted
-                listView.setAdapter(c);
             }
         });
         playButton = (Button) findViewById(R.id.play);
@@ -98,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             mp.start();
+            //Refreshing the list view to make sure only current song is highlighted
+            listView.setAdapter(c);
         }
     }
 
