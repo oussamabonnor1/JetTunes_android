@@ -10,4 +10,4 @@ JetTunes is an android mp3 player, this app is currently under build and it repr
 * Paint.Net (Image editting).
 
 ## Screenshots: 
-[Music list](Jet tunes/Music list.png)
+[Music list](JetTunes/MusicList.png)
