@@ -4,7 +4,7 @@
 ![Jetlight studio](https://img.shields.io/badge/Made%20by-Jetlight%20studio-blue.svg?color=082544)
 
 ## Description:
-JetTunes is an android mp3 player, this app is currently under build and it represents my learning jurney in android/ materiel design
+JetTunes is an android mp3 player. This app is currently under build and it represents my learning journey in android development and materiel design
 
 ## Tools & languages: 
 * Android Studio (IDE).
